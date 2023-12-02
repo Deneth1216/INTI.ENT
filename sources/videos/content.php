@@ -16,6 +16,7 @@ $pages        = array(
     'live',
     'galleries',
     'musics',
+    'comics',
     'stock'
 );
 
@@ -76,6 +77,15 @@ else if ($page == 'musics') {
 
     // pagination system 
     $videos = $db->where('privacy', 0)->where('user_id',$pt->blocked_array , 'NOT IN')->where('file_type', 'music')->where('live_time',0)->where('approved',1)->where('is_short', 0)->orderBy('id', 'DESC')->objectbuilder()->paginate(T_VIDEOS, $pt->page_number);
+    $pt->total_pages = $db->totalPages;
+    // pagination system 
+} else if ($page == 'comics') {
+    $title  = "Comics";
+    // $db->where('privacy', 0);
+    // $videos = $db->orderBy('id', 'DESC')->get(T_VIDEOS, $limit);
+
+    // pagination system 
+    $videos = $db->where('privacy', 0)->where('user_id', $pt->blocked_array, 'NOT IN')->where('file_type', 'comic')->where('live_time', 0)->where('approved', 1)->where('is_short', 0)->orderBy('id', 'DESC')->objectbuilder()->paginate(T_VIDEOS, $pt->page_number);
     $pt->total_pages = $db->totalPages;
     // pagination system 
 }
@@ -368,6 +378,27 @@ if (!empty($videos)) {
                 'CURRENCY' => $pt->config->main_payment_currency,
             ));
         }
+
+        if ($video->file_type == 'comic') {
+            $html_videos .= PT_LoadPage('galleries/list', array(
+                'ID' => $video->id,
+                'VID_ID' => $video->id,
+                'TITLE' => $video->title,
+                'VIEWS' => $video->views,
+                'VIEWS_NUM' => number_format($video->views),
+                'USER_DATA' => $video->owner,
+                'THUMBNAIL' => $video->thumbnail,
+                'URL' => $video->url,
+                'ajax_url' => $video->ajax_url,
+                'TIME' => $video->time_ago,
+                'DURATION' => $video->duration,
+                'VIDEO_ID_' => PT_Slug($video->title, $video->video_id),
+                'GIF' => $video->gif,
+                'DESC' => $video->markup_description,
+                'PRICE' => $video->sell_video,
+                'CURRENCY' => $pt->config->main_payment_currency,
+            ));
+        }
     }
 }
 if (empty($videos) || empty(ToArray($videos))) {
@@ -377,7 +408,7 @@ $pt->videos_count= count(ToArray($videos));
 $pt->page        = $page;
 $pt->title       = $title . ' | ' . $pt->config->title;
 $pt->description = $pt->config->description;
-$pt->keyword     = @$pt->config->keyword;
+$pt->keyword     = $pt->config->keyword;
 $pt->content     = PT_LoadPage('videos/content', array(
     'TITLE' => $title,
     'VIDEOS' => $html_videos,
