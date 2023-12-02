@@ -245,261 +245,41 @@
 
                ?>
 
-               <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossorigin="anonymous">
-
-               <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-                  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-                  crossorigin="anonymous"></script>
-               <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-                  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                  crossorigin="anonymous"></script>
-               <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-                  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-                  crossorigin="anonymous"></script>
-
                <style>
-                  .carousel-item {
-                     height: 480px !important;
-                  }
-
-                  .carousel-item img {
-                     height: 100% !important;
-                     object-fit: contain;
-                     object-position: center center;
-                  }
-
-                  .carousel {
-                     position: relative;
-                  }
-
-                  .carousel-inner {
-                     position: relative;
-                     width: 100%;
-                     overflow: hidden;
-                  }
-
-                  .carousel-item {
-                     position: relative;
-                     display: none;
-                     -webkit-box-align: center;
-                     -ms-flex-align: center;
-                     align-items: center;
-                     width: 100%;
-                     transition: -webkit-transform 0.6s ease;
-                     transition: transform 0.6s ease;
-                     transition: transform 0.6s ease, -webkit-transform 0.6s ease;
-                     -webkit-backface-visibility: hidden;
-                     backface-visibility: hidden;
-                     -webkit-perspective: 1000px;
-                     perspective: 1000px;
-                  }
-
-                  .carousel-item-next,
-                  .carousel-item-prev,
-                  .carousel-item.active {
-                     display: block;
-                  }
-
-                  .carousel-item-next,
-                  .carousel-item-prev {
-                     position: absolute;
-                     top: 0;
-                  }
-
-                  .carousel-item-next.carousel-item-left,
-                  .carousel-item-prev.carousel-item-right {
-                     -webkit-transform: translateX(0);
-                     transform: translateX(0);
-                  }
-
-                  @supports ((-webkit-transform-style: preserve-3d) or (transform-style: preserve-3d)) {
-
-                     .carousel-item-next.carousel-item-left,
-                     .carousel-item-prev.carousel-item-right {
-                        -webkit-transform: translate3d(0, 0, 0);
-                        transform: translate3d(0, 0, 0);
-                     }
-                  }
-
-                  .active.carousel-item-right,
-                  .carousel-item-next {
-                     -webkit-transform: translateX(100%);
-                     transform: translateX(100%);
-                  }
-
-                  @supports ((-webkit-transform-style: preserve-3d) or (transform-style: preserve-3d)) {
-
-                     .active.carousel-item-right,
-                     .carousel-item-next {
-                        -webkit-transform: translate3d(100%, 0, 0);
-                        transform: translate3d(100%, 0, 0);
-                     }
-                  }
-
-                  .active.carousel-item-left,
-                  .carousel-item-prev {
-                     -webkit-transform: translateX(-100%);
-                     transform: translateX(-100%);
-                  }
-
-                  @supports ((-webkit-transform-style: preserve-3d) or (transform-style: preserve-3d)) {
-
-                     .active.carousel-item-left,
-                     .carousel-item-prev {
-                        -webkit-transform: translate3d(-100%, 0, 0);
-                        transform: translate3d(-100%, 0, 0);
-                     }
-                  }
-
-                  .carousel-control-next,
-                  .carousel-control-prev {
-                     position: absolute;
-                     top: 0;
-                     bottom: 0;
-                     display: -webkit-box;
-                     display: -ms-flexbox;
+                  .gallery-container {
                      display: flex;
-                     -webkit-box-align: center;
-                     -ms-flex-align: center;
+                     flex-direction: column;
                      align-items: center;
-                     -webkit-box-pack: center;
-                     -ms-flex-pack: center;
-                     justify-content: center;
-                     width: 15%;
-                     color: #fff;
-                     text-align: center;
-                     opacity: 0.5;
+                     margin: 0 auto;
+                     max-width: 100%;
+                     padding: 0;
+                     height: 100vh;
+                     overflow-y: auto;
                   }
 
-                  .carousel-control-next:focus,
-                  .carousel-control-next:hover,
-                  .carousel-control-prev:focus,
-                  .carousel-control-prev:hover {
-                     color: #fff;
-                     text-decoration: none;
-                     outline: 0;
-                     opacity: 0.9;
-                  }
-
-                  .carousel-control-prev {
-                     left: 0;
-                  }
-
-                  .carousel-control-next {
-                     right: 0;
-                  }
-
-                  .carousel-control-next-icon,
-                  .carousel-control-prev-icon {
-                     display: inline-block;
-                     width: 20px;
-                     height: 20px;
-                     background: transparent no-repeat center center;
-                     background-size: 100% 100%;
-                  }
-
-                  .carousel-control-prev-icon {
-                     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
-                  }
-
-                  .carousel-control-next-icon {
-                     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
-                  }
-
-                  .carousel-indicators {
-                     position: absolute;
-                     right: 0;
-                     bottom: 10px;
-                     left: 0;
-                     z-index: 15;
-                     display: -webkit-box;
-                     display: -ms-flexbox;
-                     display: flex;
-                     -webkit-box-pack: center;
-                     -ms-flex-pack: center;
-                     justify-content: center;
-                     padding-left: 0;
-                     margin-right: 15%;
-                     margin-left: 15%;
-                     list-style: none;
-                  }
-
-                  .carousel-indicators li {
-                     position: relative;
-                     -webkit-box-flex: 0;
-                     -ms-flex: 0 1 auto;
-                     flex: 0 1 auto;
-                     width: 30px;
-                     height: 3px;
-                     margin-right: 3px;
-                     margin-left: 3px;
-                     text-indent: -999px;
-                     background-color: rgba(255, 255, 255, 0.5);
-                  }
-
-                  .carousel-indicators li::before {
-                     position: absolute;
-                     top: -10px;
-                     left: 0;
-                     display: inline-block;
+                  .gallery-item {
                      width: 100%;
-                     height: 10px;
-                     content: "";
                   }
 
-                  .carousel-indicators li::after {
-                     position: absolute;
-                     bottom: -10px;
-                     left: 0;
-                     display: inline-block;
+                  .gallery-item img {
                      width: 100%;
-                     height: 10px;
-                     content: "";
-                  }
-
-                  .carousel-indicators .active {
-                     background-color: #fff;
-                  }
-
-                  .carousel-caption {
-                     position: absolute;
-                     right: 15%;
-                     bottom: 20px;
-                     left: 15%;
-                     z-index: 10;
-                     padding-top: 20px;
-                     padding-bottom: 20px;
-                     color: #fff;
-                     text-align: center;
+                     height: auto;
                   }
                </style>
 
-
-
-               <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="1000000">
-                  <div class="carousel-inner">
-
-                     <div class="carousel-item active">
-                        <img class="d-block w-100" src="<?php echo $thumbnailImage; ?>" alt="Slide Thumbnail">
-                     </div>
-
-                     <?php foreach ($images as $index => $image): ?>
-                     <div class="carousel-item">
-                        <img class="d-block w-100" src="<?php echo $image; ?>" alt="Slide <?php echo $index; ?>">
-                     </div>
-                     <?php endforeach; ?>
-
+               <div class="gallery-container">
+                  <div class="gallery-item">
+                     <img src="<?php echo $pt->get_video->thumbnail ?>">
                   </div>
-                  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                     <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                     <span class="sr-only">Next</span>
-                  </a>
+                  <?php
+                  foreach ($images as $key => $image) {
+                     ?>
+                  <div class="gallery-item">
+                     <img src="<?php echo $image ?>">
+                  </div>
+                  <?php
+                  }
+                  ?>
                </div>
 
                <?php
@@ -520,6 +300,159 @@
                         </audio>
                      </div>
                   </div>
+               </div>
+
+               <?php
+               }
+               ?>
+
+               <?php
+               $episodes = $db->where('file_type', 'gallery')->where('parent_id', $pt->get_video->video_id)->get('videos');
+               if($pt->get_video->file_type == 'comic'){
+               ?>
+
+               <style>
+
+                  .comic-container {
+                     display: flex;
+                     flex-direction: column;
+                     align-items: center;
+                     margin: 0 auto;
+                     max-width: 100%;
+                     padding: 0;
+                     height: 100vh;
+                     overflow-y: auto;
+                     gap: 10px;
+                  }
+
+                  .container-title {
+                     font-size: 24px;
+                     font-weight: 600;
+                     margin: 0;
+                     padding: 0;
+                     margin-bottom: 10px;
+                     margin-top: 25px;
+                  }
+
+                  .containerepi {
+                     width: 100%;
+                     display: flex;
+                     border: solid 1px;
+                     border-radius: 10px;
+                     align-items: center;
+                  }
+               
+                  .part {
+                     flex: 1;
+                     /* Equal distribution of space among all parts */
+                     padding: 0px;
+                     margin: 0px;
+               
+                  }
+               
+                  .heartIcon {
+                     width: 24px;
+                     height: 24px;
+                     padding-right: 5px;
+                     filter: invert(1);
+                  }
+               
+                  .iconDiv {
+                     display: flex;
+                     flex-direction: row;
+                     align-items: center;
+                     gap: 5px;
+                  }
+               
+               
+                  .epPic {
+                     width: 100px;
+                     border-radius: 10px;
+                  }
+               
+                  .part p {
+                     font-size: 16px;
+                     vertical-align: middle;
+                     line-height: 2;
+                     margin: 0;
+                  }
+               </style>
+
+               <div>
+                  <img style="width: 100%; height: auto;" src="<?php echo $pt->config->site_url . '/' . $pt->get_video->thumbnail ?>">
+               </div>
+               
+               <h2 class="container-title">latest Episodes</h2>
+
+               <div class="comic-container">
+                  <?php
+                     if(!empty($episodes)){
+                        foreach ($episodes as $episode) {
+                           $url = PT_Link('watch/' . PT_Slug($episode->title, $episode->video_id));
+                           $likesArray = $db->where('video_id', $episode->id)->get('likes_dislikes');
+                           $likes = 0;
+                           if(!empty($likesArray)){
+                              $likes = count($likesArray);
+                           }
+                           echo '<div class="containerepi">
+                              <div class="part">
+                                 <a href="'. $url .'"><img src="' . $pt->config->site_url . '/' . $episode->thumbnail . '" class="epPic"></a>
+                              </div>
+                              <div class="part">
+                                 <a href="'. $url .'"><p>'. $episode->title .'</p></a>
+                              </div>
+                              <div class="part">
+                                 <p>'. date("Y-m-d", $episode->time) .'</p>
+                              </div>
+                              <div class="part iconDiv">
+                                 <svg fill="#ffffff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 442.04 442.04"
+                                    xml:space="preserve" stroke="#ffffff">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                       <g>
+                                          <g>
+                                             <path
+                                                d="M221.02,341.304c-49.708,0-103.206-19.44-154.71-56.22C27.808,257.59,4.044,230.351,3.051,229.203 c-4.068-4.697-4.068-11.669,0-16.367c0.993-1.146,24.756-28.387,63.259-55.881c51.505-36.777,105.003-56.219,154.71-56.219 c49.708,0,103.207,19.441,154.71,56.219c38.502,27.494,62.266,54.734,63.259,55.881c4.068,4.697,4.068,11.669,0,16.367 c-0.993,1.146-24.756,28.387-63.259,55.881C324.227,321.863,270.729,341.304,221.02,341.304z M29.638,221.021 c9.61,9.799,27.747,27.03,51.694,44.071c32.83,23.361,83.714,51.212,139.688,51.212s106.859-27.851,139.688-51.212 c23.944-17.038,42.082-34.271,51.694-44.071c-9.609-9.799-27.747-27.03-51.694-44.071 c-32.829-23.362-83.714-51.212-139.688-51.212s-106.858,27.85-139.688,51.212C57.388,193.988,39.25,211.219,29.638,221.021z">
+                                             </path>
+                                          </g>
+                                          <g>
+                                             <path
+                                                d="M221.02,298.521c-42.734,0-77.5-34.767-77.5-77.5c0-42.733,34.766-77.5,77.5-77.5c18.794,0,36.924,6.814,51.048,19.188 c5.193,4.549,5.715,12.446,1.166,17.639c-4.549,5.193-12.447,5.714-17.639,1.166c-9.564-8.379-21.844-12.993-34.576-12.993 c-28.949,0-52.5,23.552-52.5,52.5s23.551,52.5,52.5,52.5c28.95,0,52.5-23.552,52.5-52.5c0-6.903,5.597-12.5,12.5-12.5 s12.5,5.597,12.5,12.5C298.521,263.754,263.754,298.521,221.02,298.521z">
+                                             </path>
+                                          </g>
+                                          <g>
+                                             <path
+                                                d="M221.02,246.021c-13.785,0-25-11.215-25-25s11.215-25,25-25c13.786,0,25,11.215,25,25S234.806,246.021,221.02,246.021z">
+                                             </path>
+                                          </g>
+                                       </g>
+                                    </g>
+                                 </svg>
+                                 <p>'. $episode->views .'</p>
+                              </div>
+                              <div class="part iconDiv">
+                                 <svg fill="#ffffff" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 66.831 66.831" xml:space="preserve" stroke="#ffffff">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                       <g>
+                                          <path
+                                             d="M51.735,20h-2.934c1.419-3.934,2.799-9.714,0.942-14.247c-1.095-2.673-3.177-4.574-6.021-5.496 C43.197,0.086,42.651,0,42.101,0c-3.701,0-7.05,3.613-11.944,12.888c-2.199,4.171-5.364,7.683-7.593,9.577 c-0.946,0.804-1.702,1.624-2.315,2.431c-1.69-2.512-4.558-4.167-7.806-4.167c-5.185,0-9.404,4.219-9.404,9.404v27.294 c0,5.186,4.219,9.404,9.404,9.404c3.406,0,6.386-1.827,8.036-4.546c2.212,2.728,5.586,4.477,9.364,4.477h23.023 c9.507,0,10.926-6.136,10.926-9.793v-24.91C63.793,25.41,58.384,20,51.735,20z M15.847,57.427c0,1.877-1.527,3.404-3.403,3.404 c-1.877,0-3.404-1.527-3.404-3.404V30.133c0-1.877,1.527-3.404,3.404-3.404c1.876,0,3.403,1.527,3.403,3.404V57.427z M57.793,56.969c0,2.221-0.354,3.793-4.926,3.793H29.844c-3.34,0-6.058-2.717-6.058-6.057V32.059l0.008-0.095l-0.021-0.176 c-0.006-0.096-0.106-2.386,2.676-4.75c2.656-2.258,6.419-6.425,9.015-11.351c4.132-7.83,6.104-9.353,6.639-9.641 c1.039,0.388,1.688,1.007,2.087,1.981c1.293,3.156-0.331,9.224-2.603,13.587l-2.283,4.385h12.43c3.341,0,6.059,2.718,6.059,6.059 V56.969z">
+                                          </path>
+                                       </g>
+                                    </g>
+                                 </svg>
+                                 <p>'. $likes .'</p>
+                              </div>
+                           </div>';
+                        }
+                     }else{
+                        echo '<div class="not-found">No Episodes Found!</div>';
+                     }
+                  ?>
                </div>
 
                <?php

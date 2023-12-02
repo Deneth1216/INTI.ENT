@@ -35,7 +35,9 @@
             width: 50px;
         }
 
-        .video-upload, .gallery-upload, .music-upload {
+        .video-upload,
+        .gallery-upload,
+        .music-upload {
             margin-top: 50px;
             display: flex;
             flex-direction: column;
@@ -82,6 +84,16 @@
 </head>
 
 <?php
+
+$successMsg = 0;
+
+$options = $db->where('user_id', $pt->user->id)->where('file_type', 'comic')->get('videos')->where('parent_id', '0')->get('videos');
+$selectOptions = "";
+
+foreach ($options as $option) {
+    $selectOptions .= '<option value="' . $option->video_id . '">' . $option->title . '
+    </option>';
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -157,12 +169,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Insert the data into the 'videos' table
             $videoSave = $db->insert('videos', $fields);
-            if($videoSave){
-                echo "Video Save Successful";
+            if ($videoSave) {
+                $successMsg = "Video Successfully Uploaded!";
             }
-
-            // Redirect or display a success message to the user
-            echo "Upload successful!";
         } else {
             // Handle upload errors
             echo "Upload failed!";
@@ -234,6 +243,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (move_uploaded_file($thumbnail['tmp_name'], $thumbnailPath)) {
             // Handle successful thumbnail upload, e.g., associate it with the gallery
 
+            $parent_id = 0;
+
+            if($_POST['gallery-type'] == 'comic){
+                $parent_id = $_POST['season-select-input'];
+            }
+
             $fieldsGallery = array(
                 'user_id' => $pt->user->id,
                 'video_id' => $galleryFolderName, // Use the folder name as video_id
@@ -242,16 +257,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'thumbnail' => $thumbnailPath, // Store the thumbnail path
                 'video_location' => $imagePathsString, // Store the video path
                 'file_type' => 'gallery',
+                'parent_id' => $parent_id,
                 'time' => time()
             );
 
             // Insert the data into the 'videos' table
             $gallerySave = $db->insert('videos', $fieldsGallery);
-            if($gallerySave){
-                echo "Images Save Successful";
+            if ($gallerySave) {
+                $successMsg = "Gallery Successfully Uploaded!";
             }
-
-            echo "Thumbnail Upload successful!";
         } else {
             // Handle thumbnail upload errors
         }
@@ -332,11 +346,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Insert the data into the 'videos' table
             $musicSave = $db->insert('videos', $fieldsMusic);
-            if($musicSave){
-                echo "Music Save Successful";
+            if ($musicSave) {
+                $successMsg = "Music Successfully Uploaded!";
             }
-
-            echo "Upload successful!";
         } else {
             // Handle thumbnail upload errors
         }
@@ -416,6 +428,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" name="img-tag-input" id="img-tag-input" />
             </div>
             <div class="form-field">
+                <label for="is-comic-episode" class="field-label">Gallery Type</label>
+                <select id="gallery-type" name="gallery-type">
+                    <option value="gallery">General Image Gallery</option>
+                    <option value="comic">Comic Episode</option>
+                </select>
+            </div>
+            <div class="form-field" id="season-select" style="display: none;">
+                <label for="season-select-input" class="field-label">Select Comic Season</label>
+                <select id="season-select-input" name="season-select-input">
+                    <?php echo $selectOptions; ?>
+                </select>
+            </div>
+            <div class="form-field">
                 <button type="submit" id="gallery-submit" class="submit-button" data-form-id="gallery-upload">
                     Upload
                 </button>
@@ -452,6 +477,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
             </div>
         </form>
+
+        <?php if ($successMsg != 0){>
+            <div style="background-color: green; padding: 10px; color: #fff;"><?php echo $successMsg; ?></div>
+        <?php } ?>
 
         <div id="error-message" style="color: red; margin-bottom: 25px"></div>
     </div>
@@ -501,6 +530,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             return true;
         }
+
+
+        var galleryType = document.getElementById("gallery-type");
+        var seasonSelect = document.getElementById("season-select");
+        galleryType.addEventListener("change", function() {
+            if (galleryType.value == "comic") {
+                seasonSelect.style.display = "flex";
+            } else {
+                seasonSelect.style.display = "none";
+            }
+        });
+        
     </script>
 </body>
 
