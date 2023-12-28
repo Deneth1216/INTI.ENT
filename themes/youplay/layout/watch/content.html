@@ -217,9 +217,7 @@
                </div>
                <?php }} ?>
 
-               <?php
-               if($pt->get_video->file_type == 'video'){
-               ?>
+               <?php if($pt->get_video->file_type == 'video'){ ?>
 
                <video
                   id="my-video<?php if ($pt->config->player_type == 'fluidPlayer' || $pt->config->player_type == 'plyr') { ?>_<?php echo $pt->get_video->id; ?><?php } ?>"
@@ -233,12 +231,9 @@
                      type="{{VIDEO_TYPE}}" title="{{TITLE}}">
                </video>
 
-               <?php
-               }
-               ?>
+               <?php } ?>
 
-               <?php
-               if($pt->get_video->file_type == 'gallery'){
+               <?php if($pt->get_video->file_type == 'gallery'){
 
                   $images = explode(',', $pt->get_video->video_location);
                   $thumbnailImage = $pt->get_video->thumbnail;
@@ -282,13 +277,9 @@
                   ?>
                </div>
 
-               <?php
-               }
-               ?>
+               <?php } ?>
 
-               <?php
-               if($pt->get_video->file_type == 'music'){
-               ?>
+               <?php if($pt->get_video->file_type == 'music'){ ?>
 
                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="1000000">
                   <div class="carousel-inner">
@@ -302,17 +293,14 @@
                   </div>
                </div>
 
-               <?php
-               }
-               ?>
+               <?php } ?>
 
                <?php
-               $episodes = $db->where('file_type', 'gallery')->where('parent_id', $pt->get_video->video_id)->get('videos');
-               if($pt->get_video->file_type == 'comic'){
+                  $episodes = $db->where('file_type', 'gallery')->where('parent_id', $pt->get_video->video_id)->get('videos');
+                  if($pt->get_video->file_type == 'comic'){
                ?>
 
                <style>
-
                   .comic-container {
                      display: flex;
                      flex-direction: column;
@@ -341,35 +329,35 @@
                      border-radius: 10px;
                      align-items: center;
                   }
-               
+
                   .part {
                      flex: 1;
                      /* Equal distribution of space among all parts */
                      padding: 0px;
                      margin: 0px;
-               
+
                   }
-               
+
                   .heartIcon {
                      width: 24px;
                      height: 24px;
                      padding-right: 5px;
                      filter: invert(1);
                   }
-               
+
                   .iconDiv {
                      display: flex;
                      flex-direction: row;
                      align-items: center;
                      gap: 5px;
                   }
-               
-               
+
+
                   .epPic {
                      width: 100px;
                      border-radius: 10px;
                   }
-               
+
                   .part p {
                      font-size: 16px;
                      vertical-align: middle;
@@ -379,9 +367,10 @@
                </style>
 
                <div>
-                  <img style="width: 100%; height: auto;" src="<?php echo $pt->config->site_url . '/' . $pt->get_video->thumbnail ?>">
+                  <img style="width: 100%; height: auto;"
+                     src="<?php echo $pt->config->site_url . '/' . $pt->get_video->thumbnail ?>">
                </div>
-               
+
                <h2 class="container-title">latest Episodes</h2>
 
                <div class="comic-container">
@@ -455,9 +444,7 @@
                   ?>
                </div>
 
-               <?php
-               }
-               ?>
+               <?php } ?>
 
                <?php if ($pt->config->resize_video == 'on') { ?>
                <div class="icons hidden">
