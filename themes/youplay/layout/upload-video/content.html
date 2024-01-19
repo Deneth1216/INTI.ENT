@@ -27,6 +27,11 @@
         .select-button {
             padding: 30px 50px;
             border-radius: 25px;
+            background-color: transparent;
+            border: 1px solid #3a3b3c;
+        }
+
+        .select-button.active {
             background-color: #04abf2;
             border: none;
         }
@@ -67,6 +72,13 @@
             padding: 20px;
         }
 
+        select {
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 20px;
+        }
+
         .submit-button {
             padding: 20px;
             color: #fff;
@@ -87,12 +99,13 @@
 
 $successMsg = 0;
 
-$options = $db->where('user_id', $pt->user->id)->where('file_type', 'comic')->get('videos')->where('parent_id', '0')->get('videos');
+$options = $db->where('user_id', $pt->user->id)->where('file_type', 'comic')->where('parent_id', '0')->get('videos');
 $selectOptions = "";
 
-foreach ($options as $option) {
-    $selectOptions .= '<option value="' . $option->video_id . '">' . $option->title . '
-    </option>';
+if ($options) {
+    foreach ($options as $option) {
+        $selectOptions .= '<option value="' . $option->video_id . '">' . $option->title . '</option>';
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -183,6 +196,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Define the target directory for gallery image uploads
         $galleryUploadDir = 'upload/photos/';
 
+        if ($_POST['gallery-type'] == 'season') {
+            $galleryUploadDir = 'upload/gallery/';
+        }
+
         // Create the current year and month directories if they don't exist
         $galleryCurrentYear = date('Y');
         $galleryCurrentMonth = date('m');
@@ -223,14 +240,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Handle successful image upload, e.g., store image path in a database if needed
 
                 $uploadedImagePaths[] = $galleryImagePath;
-
-                echo "Images Upload successful!";
             } else {
                 // Handle image upload errors
             }
         }
 
-        $imagePathsString = implode(',', $uploadedImagePaths);
+        $imagePathsString = "";
+
+        if ($_POST['gallery-type'] == 'season') {
+            $imagePathsString = "";
+        } else {
+            $imagePathsString = implode(',', $uploadedImagePaths);
+        }
 
         // Generate a unique filename for the thumbnail
         $thumbnailFileExtension = pathinfo($thumbnail['name'], PATHINFO_EXTENSION);
@@ -245,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $parent_id = 0;
 
-            if($_POST['gallery-type'] == 'comic){
+            if ($_POST['gallery-type'] == 'comic') {
                 $parent_id = $_POST['season-select-input'];
             }
 
@@ -256,7 +277,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'description' => $_POST['img-desc-input'],
                 'thumbnail' => $thumbnailPath, // Store the thumbnail path
                 'video_location' => $imagePathsString, // Store the video path
-                'file_type' => 'gallery',
+                'file_type' => $_POST['gallery-type'],
                 'parent_id' => $parent_id,
                 'time' => time()
             );
@@ -361,13 +382,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="upload-wrap">
         <h1>What are you uploading?</h1>
         <div class="upload-select">
-            <button class="select-button" onclick="showForm('video-upload')">
+            <button class="select-button" onclick="showForm('video-upload', this)">
                 <img src="../themes/youplay/layout/upload-video/video.png" class="button-icon" />
             </button>
-            <button class="select-button" onclick="showForm('gallery-upload')">
+            <button class="select-button" onclick="showForm('gallery-upload', this)">
                 <img src="../themes/youplay/layout/upload-video/gallery.png" class="button-icon" />
             </button>
-            <button class="select-button" onclick="showForm('music-upload')">
+            <button class="select-button" onclick="showForm('music-upload', this)">
                 <img src="../themes/youplay/layout/upload-video/musical-note.png" class="button-icon" />
             </button>
         </div>
@@ -405,6 +426,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form action="" class="gallery-upload form-container" id="gallery-upload" name="gallery-upload" method="post" enctype="multipart/form-data">
             <input type="hidden" name="gallery_hidden" value="2" />
+            <div class="form-field">
+                <label for="is-comic-episode" class="field-label">Gallery Type</label>
+                <select id="gallery-type" name="gallery-type">
+                    <option value="gallery">General Image Gallery</option>
+                    <option value="comic">Comic Episode</option>
+                    <option value="season">Comic Season</option>
+                </select>
+            </div>
             <div class="file-upload-wrapper">
                 <div class="form-field">
                     <label for="gallery-input" class="field-label">Select Image Files</label>
@@ -426,13 +455,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-field">
                 <label for="img-tag-input" class="field-label">Add Tags (seperated by " , ")</label>
                 <input type="text" name="img-tag-input" id="img-tag-input" />
-            </div>
-            <div class="form-field">
-                <label for="is-comic-episode" class="field-label">Gallery Type</label>
-                <select id="gallery-type" name="gallery-type">
-                    <option value="gallery">General Image Gallery</option>
-                    <option value="comic">Comic Episode</option>
-                </select>
             </div>
             <div class="form-field" id="season-select" style="display: none;">
                 <label for="season-select-input" class="field-label">Select Comic Season</label>
@@ -478,30 +500,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
 
-        <?php if ($successMsg != 0){>
-            <div style="background-color: green; padding: 10px; color: #fff;"><?php echo $successMsg; ?></div>
+        <?php if ($successMsg != 0) { ?>
+            <div style="background-color: green; padding: 10px; color: #fff;"><?php echo $successMsg; ?>
+            </div>
         <?php } ?>
 
         <div id="error-message" style="color: red; margin-bottom: 25px"></div>
     </div>
 
     <script>
-        function showForm(formName) {
+        function showForm(formName, button) {
             // Hide all forms
             var forms = document.querySelectorAll(".form-container");
             forms.forEach(function(form) {
                 form.style.display = "none";
+                button.classList.remove("active");
             });
 
             // Show the selected form
             var selectedForm = document.getElementById(formName);
             if (selectedForm) {
                 selectedForm.style.display = "block";
+                button.classList.add("active");
             }
         }
 
         // Show the default form (video upload) when the page loads
-        showForm("video-upload");
+        showForm("video-upload", document.querySelector(".select-button"));
 
         // Function to validate the form
         function validateForm(form) {
@@ -534,14 +559,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         var galleryType = document.getElementById("gallery-type");
         var seasonSelect = document.getElementById("season-select");
+        var imagesInput = document.getElementById("gallery-input");
         galleryType.addEventListener("change", function() {
             if (galleryType.value == "comic") {
                 seasonSelect.style.display = "flex";
             } else {
                 seasonSelect.style.display = "none";
             }
+
+            if (galleryType.value == "season") {
+                imagesInput.style.display = "none";
+            } else {
+                imagesInput.style.display = "block";
+            }
         });
-        
     </script>
 </body>
 

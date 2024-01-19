@@ -233,7 +233,7 @@
 
                <?php } ?>
 
-               <?php if($pt->get_video->file_type == 'gallery'){
+               <?php if($pt->get_video->file_type == 'gallery' || $pt->get_video->file_type == 'comic'){
 
                   $images = explode(',', $pt->get_video->video_location);
                   $thumbnailImage = $pt->get_video->thumbnail;
