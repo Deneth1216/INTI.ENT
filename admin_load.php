@@ -1,6 +1,9 @@
 <?php
 require 'assets/init.php';
 
+
+echo "test";
+
 if (IS_LOGGED == false || (PT_IsAdmin() == false && !in_array($pt->user->admin, array(1,2,3)))) {
     header("Location: " . PT_Link(''));
     exit();
