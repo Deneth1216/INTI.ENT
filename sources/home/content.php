@@ -498,6 +498,7 @@ $pt->content = PT_LoadPage('home/content', array(
     'LATEST_LIST' => $latest_list,
     'LATEST_LIST_GALLERY' => $latest_list_gallery,
     'LATEST_LIST_MUSIC' => $latest_list_music,
+    'LATEST_LIST_COMIC' => $latest_list_comic,
     'HOME_PAGE_VIDEOS' => $video_categories_html,
     'SUBSC_HTML' => $get_subscriptions_videos_html,
     'VIDEO_ID_' => PT_Slug($get_video->title, $get_video->video_id),

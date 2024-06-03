@@ -2,5 +2,3 @@ changes/
 themes/default/css/.sass-cache/
 node_modules/
 upload/
-/config.php
-assets/import

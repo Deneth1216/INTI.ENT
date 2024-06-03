@@ -1,0 +1,206 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Comic Gallery</title>
+
+    <style>
+        div.upload-wrap {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+            justify-content: center;
+            background-color: #3a3b3c;
+            border-radius: 10px;
+        }
+
+        .upload-select {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .select-button {
+            padding: 30px 50px;
+            border-radius: 25px;
+            background-color: #04abf2;
+            border: none;
+        }
+
+        .button-icon {
+            width: 50px;
+        }
+
+        .video-upload,
+        .gallery-upload,
+        .music-upload {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 60%;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .file-upload-wrapper {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+        }
+
+        .field-label {
+            font-size: 18px;
+        }
+
+        .form-field input {
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        .submit-button {
+            padding: 20px;
+            color: #fff;
+            background-color: #04abf2;
+            border: none;
+            border-radius: 10px;
+            margin: 25px 0px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<?php
+
+$successMsg = 0;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $videoForm = $_POST['video_hidden'];
+
+    if ($videoForm == 1) {
+        // Define the target directory for video uploads
+        $uploadDir = 'upload/gallery/';
+
+        // Create the current year and month directories if they don't exist
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        $targetDir = $uploadDir . $currentYear . '/' . $currentMonth . '/';
+
+        if (!is_dir($targetDir)) {
+            // Create the year directory if it doesn't exist
+            if (!is_dir($uploadDir . $currentYear)) {
+                mkdir($uploadDir . $currentYear);
+            }
+
+            // Create the month directory
+            mkdir($targetDir);
+        }
+
+        // Handle the video file upload
+        $thumbnailFile = $_FILES['video-thumb-input'];
+        $videoTitle = $_POST['video-title-input'];
+        $videoDescription = $_POST['video-desc-input'];
+        $videoTags = $_POST['video-tag-input'];
+
+        // Generate a unique folder name for this video upload
+        $videoFolderName = uniqid();
+
+        // Define the path for the dedicated folder
+        $videoFolderPath = $targetDir . $videoFolderName . '/';
+
+        // Create a dedicated folder for this video upload
+        mkdir($videoFolderPath);
+
+        // Generate a unique filename for the video and thumbnail
+        $thumbnailFileExtension = pathinfo($thumbnailFile['name'], PATHINFO_EXTENSION);
+
+        $thumbnailFileName = uniqid() . '.' . $thumbnailFileExtension;
+
+        // Define the paths for video and thumbnail within the dedicated folder
+        $thumbnailPath = $videoFolderPath . $thumbnailFileName;
+
+        // Move the uploaded files to the dedicated folder
+        if (move_uploaded_file($thumbnailFile['tmp_name'], $thumbnailPath)) {
+
+            $fields = array(
+                'user_id' => $pt->user->id,
+                'video_id' => $videoFolderName, // Use the folder name as video_id
+                'title' => $_POST['video-title-input'],
+                'description' => $_POST['video-desc-input'],
+                'thumbnail' => $thumbnailPath, // Store the thumbnail path
+                'video_location' => $videoFolderPath, // Store the video path
+                'file_type' => 'comic',
+                'parent_id' => '0',
+                'time' => time()
+            );
+
+            // Insert the data into the 'videos' table
+            $videoSave = $db->insert('videos', $fields);
+            if($videoSave){
+                echo "Comic Gallery Created!";
+            }
+
+            // Redirect or display a success message to the user
+            echo "Comic Gallery Created!";
+        } else {
+            // Handle upload errors
+            echo "Upload failed!";
+        }
+    }
+}
+
+?>
+
+<body>
+    <div class="upload-wrap">
+        <h1>Create Comic Gallery</h1>
+        <p>Create your comic gallery here and use Upload page to add episodes to your comic gallery.</p>
+
+        <form class="video-upload form-container" name="video-upload" id="video-upload" method="post"
+            enctype="multipart/form-data">
+            <input type="hidden" name="video_hidden" value="1" />
+                <div class="form-field">
+                    <label for="thumb-input" class="field-label">Select Thumbnail</label>
+                    <input type="file" name="video-thumb-input" id="thumb-input" accept="image/*" />
+                </div>
+            <div class="form-field">
+                <label for="title-input" class="field-label">Comic Title</label>
+                <input type="text" name="video-title-input" id="title-input" />
+            </div>
+            <div class="form-field">
+                <label for="desc-input" class="field-label">Description</label>
+                <input type="text" name="video-desc-input" id="desc-input" />
+            </div>
+            <div class="form-field">
+                <label for="tag-input" class="field-label">Add Tags (seperated by " , ")</label>
+                <input type="text" name="video-tag-input" id="tag-input" />
+            </div>
+            <div class="form-field">
+                <button type="submit" id="video-submit" class="submit-button" data-form-id="video-upload">
+                    Create Gallery
+                </button>
+            </div>
+        </form>
+
+        <?php if ($successMsg != 0){>
+        <div style="background-color: green; padding: 10px; color: #fff;">
+            <?php echo $successMsg; ?>
+        </div>
+        <?php } ?>
+
+        <div id="error-message" style="color: red; margin-bottom: 25px"></div>
+    </div>
+</body>
+
+</html>
